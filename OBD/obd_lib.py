@@ -20,6 +20,8 @@ init_obd = 'ATP01'
 list_commands = '0100'
 rpm = '010c'
 
+# TODO: Make ReadCommand Read when data is availble make it blocking
+
 class obd:
     # A Simple class for controlling ELM327 based OBD Scanners
 
@@ -40,6 +42,7 @@ class obd:
 
         ## Init Port and Modes
         self.init_port()
+        self.init_ELM327()
         self.obdmodes = self.init_modes()
         self.obdcmds = self.loadcmds()
 
@@ -83,8 +86,11 @@ class obd:
         self.write_ELM('ATZ')
         sleep(1)
         # Find Protocol
-        self.write_ELM('ATP01')
-        sleep(.7)
+        self.write_ELM('ATSP0')
+        sleep(7)
+        self.write_ELM('0100')
+        sleep(3)
+        self.readline()
 
         return None
 
@@ -118,8 +124,9 @@ class obd:
     def readobd(self):
         return None
 
-    def toInt(self, string):
-        return int(string, 16)
+    def toInt(self, string_in):
+        # Return numerical val from string val
+        return int(string_in, 16)
 
     def readline(self, len=0):
         # Read line from ELM327
