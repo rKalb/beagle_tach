@@ -81,10 +81,10 @@ class obd:
     def init_ELM327(self):
         # Init ELM327 Device
         self.write_ELM('ATZ')
-        sleep(.3)
+        sleep(1)
         # Find Protocol
-        self.write_ELM('STP01')
-        sleep(.3)
+        self.write_ELM('ATP01')
+        sleep(.7)
 
         return None
 
@@ -117,6 +117,9 @@ class obd:
 
     def readobd(self):
         return None
+
+    def toInt(self, string):
+        return int(string, 16)
 
     def readline(self, len=0):
         # Read line from ELM327
@@ -166,4 +169,10 @@ class obd:
 
     def temp_tach(self):
         cmd = '010C'
+        tach_data = self.write_ELM(cmd)
         # Response 41 0C 0B 03
+        data = tach_data.split(' ')
+        rpm = data[-3:-1]
+        rpm_out = ((self.toInt(rpm[0])*256) + self.toInt(rpm[1]))/4
+
+        return rpm_out
