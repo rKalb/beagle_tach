@@ -1,0 +1,248 @@
+IPython 1.2.1 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object', use 'object??' for extra details.
+
+In [1]: from obd_lib import obd
+
+In [2]: suby = obd()
+
+In [3]: suby.write_ELM('ATZ')
+Out[3]: 'ERROR'
+
+In [4]: suby.write_ELM('ATZ')
+Out[4]: '27 v1.3a\r\r>A'
+
+In [5]: ser.close
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-5-e3259a5b1b01> in <module>()
+----> 1 ser.close
+
+NameError: name 'ser' is not defined
+
+In [6]: suby.write_ELM('STP01')
+Out[6]: 'ERROR'
+
+In [7]: suby.write_ELM('STP01')
+Out[7]: 'ERROR'
+
+In [8]: suby.write_ELM('STP01')
+Out[8]: 'ERROR'
+
+In [9]: suby.ser.inWaiting()
+Out[9]: 0
+
+In [10]: suby.ser.write('STP01\r')
+Out[10]: 6
+
+In [11]: suby.ser.in
+suby.ser.inWaiting         suby.ser.interCharTimeout
+
+In [11]: suby.ser.inWaiting()
+Out[11]: 10
+
+In [12]: suby.ser.inWaiting()
+Out[12]: 10
+
+In [13]: suby.ser.inWaiting()
+Out[13]: 10
+
+In [14]: suby.ser.inWaiting()
+Out[14]: 10
+
+In [15]: if suby.ser.in
+suby.ser.inWaiting         suby.ser.interCharTimeout
+
+In [15]: if suby.ser.inWaiting() != 0:
+   ....:
+   ....:
+   ....:
+   ....:
+KeyboardInterrupt
+
+In [15]: buff = 0
+
+In [16]: buff = ''
+
+In [17]: if suby.ser.inWaiting() != 0:
+   ....:     buff += suby.ser.read(suby.ser.in
+suby.ser.inWaiting         suby.ser.interCharTimeout
+   ....:     buff += suby.ser.read(suby.ser.inWaiting())
+   ....:
+
+In [18]: buff
+Out[18]: 'STP01\r?\r\r>'
+
+In [19]: suby.ser.write('ATSP0\r')
+Out[19]: 6
+
+In [20]: if suby.ser.inWaiting() != 0:
+    buff += suby.ser.read(suby.ser.inWaiting())
+   ....:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+KeyboardInterrupt
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]:
+
+In [21]: d
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-21-e29311f6f1bf> in <module>()
+----> 1 d
+
+NameError: name 'd' is not defined
+
+In [22]: if suby.ser.inWaiting() != 0:
+    buff += suby.ser.read(suby.ser.inWaiting())
+   ....:
+
+In [23]: buff
+Out[23]: 'STP01\r?\r\r>ATSP0\rOK\r\r>'
+
+In [24]: suby.write_ELM('ATSP0')
+Out[24]: ''
+
+In [25]: suby.write_ELM('0100')
+Out[25]: 'ERROR'
+
+In [26]: if suby.ser.inWaiting() != 0:
+    buff += suby.ser.read(suby.ser.inWaiting())
+   ....:
+
+In [27]: buff
+Out[27]: 'STP01\r?\r\r>ATSP0\rOK\r\r>41 00 BE 3F E8 11 \r\r>'
+
+In [28]: buff = ''
+
+In [29]: suby.write_ELM('0100')
+Out[29]: ' 00 BE 3F E8 11 '
+
+In [30]: suby.write_ELM('0100')
+Out[30]: ' 00 BE 3F E8 11 '
+
+In [31]: suby.write_ELM('010C')
+Out[31]: ' 0C 0B 1E '
+
+In [32]: suby.write_ELM('010C')
+Out[32]: ' 0C 0D 75 '
+
+In [33]: suby.write_ELM('010C')
+Out[33]: ' 0C 0C 96 '
+
+In [34]: suby.write_ELM('010C')
+Out[34]: ' 0C 0C 42 '
+
+In [35]: suby.write_ELM('010C')
+Out[35]: ' 0C 0B C5 '
+
+In [36]: suby.write_ELM('010C')
+Out[36]: ' 0C 0B 97 '
+
+In [37]: suby.write_ELM('010C')
+Out[37]: ' 0C 0B AF '
+
+In [38]: suby.write_ELM('010C')
+Out[38]: ' 0C 0B F2 '
+
+In [39]: exit
+tesla@tesla-virtual-machine:~/beagle_tach/OBD$ sudo ipython
+Python 2.7.6 (default, Mar 22 2014, 22:59:38)
+Type "copyright", "credits" or "license" for more information.
+
+IPython 1.2.1 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object', use 'object??' for extra details.
+
+In [1]: from obd_lib import obd
+
+In [2]: suby = obd()
+
+In [3]: suby.write_ELM('0100')
+Out[3]: '41 00 BE 3F E8 11 '
+
+In [4]: suby.write_ELM('010C')
+Out[4]: '41 0C 0B FF '
+
+In [5]: suby.write_ELM('010C')
+Out[5]: '41 0C 0B 06 '
+
+In [6]: suby.write_ELM('010C')
+Out[6]: '41 0C 0A EB '
+
+In [7]: suby.write_ELM('010C')
+Out[7]: '41 0C 0A F9 '
+
+In [8]: suby.write_ELM('010C')
+Out[8]: '41 0C 0B 2F '
+
+In [9]: suby.write_ELM('010C')
+Out[9]: '41 0C 0A D9 '
+
+In [10]: suby.write_ELM('010C')
+Out[10]: '41 0C 0A F7 '
+
+In [11]: suby.write_ELM('010C')
+Out[11]: '41 0C 0B 06 '
+
+In [12]: suby.write_ELM('010C')
+Out[12]: '41 0C 0B 22 '
+
+In [13]: suby.write_ELM('010C')
+Out[13]: '41 0C 0A F6 '
+
+In [14]: tach = suby.write_ELM('010C')
+
+In [15]: tach
+Out[15]: '41 0C 0B 03 '
+
+In [16]: tach.spl
+tach.split       tach.splitlines
+
+In [16]: tach.split(' ')
+Out[16]: ['41', '0C', '0B', '03', '']
+
+In [17]: ts = tach.split(' ')
+
+In [18]: ts[-1]
+Out[18]: ''
+
+In [19]: ts[0:-1]
+Out[19]: ['41', '0C', '0B', '03']
+
+In [20]: ts = ts[0:-1]
+
+In [21]: ts
+Out[21]: ['41', '0C', '0B', '03']
+
+In [22]: len(ts)
+Out[22]: 4
+
+In [23]: ts[3]
+Out[23]: '03'
+
+In [24]: ts[3]

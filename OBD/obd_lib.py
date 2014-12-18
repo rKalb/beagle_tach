@@ -16,7 +16,7 @@ from time import sleep
 # OBD Commands for ELM327
 reset_obd = 'ATZ'
 check_voltage = 'ATRV'
-init_obd = 'STP01'
+init_obd = 'ATP01'
 list_commands = '0100'
 rpm = '010c'
 
@@ -27,17 +27,19 @@ class obd:
         # Initilize the Port
         # TODO: Add Port Name Back
         self.data = []
+        self.port_name = port_name
         self.baud_rate = 9600
         self.data_bits = 8
         self.stop_bits = 1
-        self.line_ending = 'CR'
+        self.line_ending = '\r'
         self.elmchar = '>'
+        self.elmerror = '?'
         self.obdcmds = {}
         self.obdmodes = {}
         self.os_type = name
 
         ## Init Port and Modes
-        #init_port()
+        self.init_port()
         self.obdmodes = self.init_modes()
         self.obdcmds = self.loadcmds()
 
@@ -46,8 +48,8 @@ class obd:
     def init_port(self):
         try:
         # Attempt to Open Port
-            self.ser.setBaudrate = self.baud_rate
-            self.ser.port = self.port_name
+            #self.ser.setBaudrate = self.baud_rate
+            #self.ser.port = self.port_name
 
             if self.os_type == 'win32':
                 self.ser = serial.Win32Serial()
@@ -65,8 +67,26 @@ class obd:
 
         return None
 
+    def write_ELM(self, data):
+        # Write to ELM and Check that Command was Correct
+        cmd_len = self.ser.write(data + self.line_ending)
+        sleep(.7)
+        response = self.readline(cmd_len)
+
+        if 'BADCMD' in response:
+            return 'ERROR'
+        else:
+            return response
+
     def init_ELM327(self):
-        self.ser.write
+        # Init ELM327 Device
+        self.write_ELM('ATZ')
+        sleep(.3)
+        # Find Protocol
+        self.write_ELM('STP01')
+        sleep(.3)
+
+        return None
 
     def init_modes(self):
         # Initilize OBD Modes Dict
@@ -98,7 +118,7 @@ class obd:
     def readobd(self):
         return None
 
-    def readline(self):
+    def readline(self, len=0):
         # Read line from ELM327
 
         buff = ''
@@ -106,8 +126,11 @@ class obd:
         if self.ser.inWaiting() != 0:
             buff += self.ser.read(self.ser.inWaiting())
         if self.elmchar in buff:
-            # TODO: Fix the buffer with correct information
-            retcmd = buff[:-4]
+            # Pulls Response
+            if self.elmerror not in buff:
+                retcmd = buff[len:-3]
+            else:
+                retcmd = 'BADCMD'
         else:
             retcmd = 'ERROR'
 
@@ -141,3 +164,6 @@ class obd:
 
         return cmds
 
+    def temp_tach(self):
+        cmd = '010C'
+        # Response 41 0C 0B 03
