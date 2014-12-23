@@ -7,7 +7,11 @@ DEPLOYMENTFOLDERS = folder_01
 QML_IMPORT_PATH =
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp
+HEADERS = receiver.h
+SOURCES += main.cpp \
+    receiver.cpp
+
+QT += network
 
 # Installation path
 # target.path =
@@ -31,3 +35,7 @@ OTHER_FILES += \
     qml/dialcontrol/content/needle.png \
     qml/dialcontrol/content/overlay.png \
     qml/dialcontrol/content/quit.png
+#HEADERS += \
+#    receiver.h
+
+
