@@ -57,10 +57,13 @@ class Receiver : public QWidget
 
 public:
     Receiver(QWidget *parent = 0);
+
+public slots:
     int pullRPM();
 
 private slots:
     void processPendingDatagrams();
+
 
 private:
     QLabel *statusLabel;

@@ -42,6 +42,8 @@ class obd:
         self.os_type = name
         self.debug = True
 
+        self.dRPM = 0
+
         self.UDP_IP = "127.0.0.1"
         self.UDP_PORT = 5050
         self.UDP_tup = (self.UDP_IP, self.UDP_PORT)
@@ -197,7 +199,13 @@ class obd:
         if self.debug is False:
             rpm_out = self.temp_tach()
         else:
-            rpm_out = 768
+            sleep(.2)
+            if self.dRPM > 500:
+                self.dRPM = 0
+            else:
+                self.dRPM += 1
+            rpm_out = self.dRPM
+
         return 'RPM:' + str(rpm_out)
 
     def start_server(self):
