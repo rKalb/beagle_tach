@@ -2,6 +2,7 @@
 # Over Serial
 
 import serial
+import socket
 from os import name
 from obdCmd import obdCmd
 from time import sleep
@@ -39,10 +40,18 @@ class obd:
         self.obdcmds = {}
         self.obdmodes = {}
         self.os_type = name
+        self.debug = True
+
+        self.UDP_IP = "127.0.0.1"
+        self.UDP_PORT = 5050
+        self.UDP_tup = (self.UDP_IP, self.UDP_PORT)
+        self.udp_socket = 0
 
         ## Init Port and Modes
-        self.init_port()
-        self.init_ELM327()
+        if port_name != 'debug':
+            self.debug = False
+            self.init_port()
+            self.init_ELM327()
         self.obdmodes = self.init_modes()
         self.obdcmds = self.loadcmds()
 
@@ -183,3 +192,24 @@ class obd:
         rpm_out = ((self.toInt(rpm[0])*256) + self.toInt(rpm[1]))/4
 
         return rpm_out
+
+    def rpm(self):
+        if self.debug is False:
+            rpm_out = self.temp_tach()
+        else:
+            rpm_out = 768
+        return 'RPM:' + str(rpm_out)
+
+    def start_server(self):
+        self.udp_socket = socket.socket(socket.AF_INET, #Internet
+                                        socket.SOCK_DGRAM) #UDP
+
+    def udp_send (self, data='DEADBEEF'):
+        self.udp_socket.sendto(data, self.UDP_tup)
+
+    def run_tach_server(self):
+        # Contiuously Send RPM over UDP
+        self.start_server()
+        while True:
+            data = self.rpm()
+            self.udp_send(data)
