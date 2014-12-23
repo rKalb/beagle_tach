@@ -38,66 +38,66 @@
 **
 ****************************************************************************/
 
-//! [imports]
-import QtQuick 1.0
-import "content"
-//! [imports]
+#include <QtGui>
+#include <QtNetwork>
+
+#include "receiver.h"
+
+Receiver::Receiver(QWidget *parent)
+    : QWidget(parent)
+{
+    statusLabel = new QLabel(tr("Listening for broadcasted messages"));
+    statusLabel->setWordWrap(true);
+
+#ifdef Q_OS_SYMBIAN
+    quitAction = new QAction(tr("Exit"), this);
+    quitAction->setSoftKeyRole(QAction::NegativeSoftKey);
+    addAction(quitAction);
+#else
+    quitButton = new QPushButton(tr("&Quit"));
+#endif
 
 //! [0]
-Rectangle {
-    color: "#545454"
-    width: 320; height: 240
+    udpSocket = new QUdpSocket(this);
+    udpSocket->bind(5050, QUdpSocket::ShareAddress);
+//! [0]
 
-    // Dial with a slider to adjust it
-    Dial {
-        id: dial
-        anchors.centerIn: parent
-        
-        property int rpm_in: 100
-        //Set Dial Value Here
-        value: rpm_in * 100 / (container.width - 34)
-    }
+//! [1]
+    connect(udpSocket, SIGNAL(readyRead()),
+            this, SLOT(processPendingDatagrams()));
+//! [1]
+#ifdef Q_OS_SYMBIAN
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(close()));
 
-    Rectangle {
-        id: container
-        anchors { bottom: parent.bottom; left: parent.left
-            right: parent.right; leftMargin: 20; rightMargin: 20
-            bottomMargin: 10
-        }
-        height: 16
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(statusLabel);
+    setLayout(mainLayout);
+#else
+    connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
 
-        radius: 8
-        opacity: 0.7
-        smooth: true
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "gray" }
-            GradientStop { position: 1.0; color: "white" }
-        }
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    buttonLayout->addStretch(1);
+    buttonLayout->addWidget(quitButton);
+    buttonLayout->addStretch(1);
 
-        Rectangle {
-            id: slider
-            x: 1; y: 1; width: 30; height: 14
-            radius: 6
-            smooth: true
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#424242" }
-                GradientStop { position: 1.0; color: "black" }
-            }
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(statusLabel);
+    mainLayout->addLayout(buttonLayout);
+    setLayout(mainLayout);
+#endif
 
-            MouseArea {
-                anchors.fill: parent
-                anchors.margins: -16 // Increase mouse area a lot outside the slider
-                drag.target: parent; drag.axis: Drag.XAxis
-                drag.minimumX: 2; drag.maximumX: container.width - 32
-            }
-        }
-    }
-    /*
-    QuitButton {
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.margins: 10
-    }
-    */
+    setWindowTitle(tr("Broadcast Receiver"));
 }
-//! [0]
+
+void Receiver::processPendingDatagrams()
+{
+//! [2]
+    while (udpSocket->hasPendingDatagrams()) {
+        QByteArray datagram;
+        datagram.resize(udpSocket->pendingDatagramSize());
+        udpSocket->readDatagram(datagram.data(), datagram.size());
+        statusLabel->setText(tr("Received datagram: \"%1\"")
+                             .arg(datagram.data()));
+    }
+//! [2]
+}

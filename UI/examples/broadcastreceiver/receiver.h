@@ -38,66 +38,36 @@
 **
 ****************************************************************************/
 
-//! [imports]
-import QtQuick 1.0
-import "content"
-//! [imports]
+#ifndef RECEIVER_H
+#define RECEIVER_H
 
-//! [0]
-Rectangle {
-    color: "#545454"
-    width: 320; height: 240
+#include <QWidget>
 
-    // Dial with a slider to adjust it
-    Dial {
-        id: dial
-        anchors.centerIn: parent
-        
-        property int rpm_in: 100
-        //Set Dial Value Here
-        value: rpm_in * 100 / (container.width - 34)
-    }
+QT_BEGIN_NAMESPACE
+class QLabel;
+class QPushButton;
+class QUdpSocket;
+class QAction;
+QT_END_NAMESPACE
 
-    Rectangle {
-        id: container
-        anchors { bottom: parent.bottom; left: parent.left
-            right: parent.right; leftMargin: 20; rightMargin: 20
-            bottomMargin: 10
-        }
-        height: 16
+class Receiver : public QWidget
+{
+    Q_OBJECT
 
-        radius: 8
-        opacity: 0.7
-        smooth: true
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "gray" }
-            GradientStop { position: 1.0; color: "white" }
-        }
+public:
+    Receiver(QWidget *parent = 0);
 
-        Rectangle {
-            id: slider
-            x: 1; y: 1; width: 30; height: 14
-            radius: 6
-            smooth: true
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#424242" }
-                GradientStop { position: 1.0; color: "black" }
-            }
+private slots:
+    void processPendingDatagrams();
 
-            MouseArea {
-                anchors.fill: parent
-                anchors.margins: -16 // Increase mouse area a lot outside the slider
-                drag.target: parent; drag.axis: Drag.XAxis
-                drag.minimumX: 2; drag.maximumX: container.width - 32
-            }
-        }
-    }
-    /*
-    QuitButton {
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.margins: 10
-    }
-    */
-}
-//! [0]
+private:
+    QLabel *statusLabel;
+#ifdef Q_OS_SYMBIAN
+    QAction *quitAction;
+#else
+    QPushButton *quitButton;
+#endif
+    QUdpSocket *udpSocket;
+};
+
+#endif
