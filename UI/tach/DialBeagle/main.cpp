@@ -6,6 +6,7 @@
 #include <QDeclarativeContext>
 #include <QDebug>
 #include <QDeclarativeProperty>
+#include <QString>
 
 #include "receiver.h"
 
@@ -22,13 +23,18 @@ int main(int argc, char *argv[])
 
     QtQuick1ApplicationViewer viewer;
     Receiver udp_rpm;
-    udp_rpm.show();
+    int varRPM = udp_rpm.pullRPM();
+
     viewer.addImportPath(QLatin1String("modules"));
     viewer.setOrientation(QtQuick1ApplicationViewer::ScreenOrientationAuto);
-    viewer.rootContext()->setContextProperty("currentRPM", udp_rpm.pullRPM());
-    qDebug() << udp_rpm.pullRPM();
+    viewer.rootContext()->setContextProperty("currentRPM", (varRPM = udp_rpm.pullRPM()));
+    qDebug() << varRPM;
     viewer.setMainQmlFile(QLatin1String("qml/dialcontrol/dialcontrol.qml"));
     viewer.showExpanded();
+
+    udp_rpm.show();
+
+
 
     //Receiver reciever;
     //reciever.show();
@@ -42,7 +48,6 @@ void set_rpm(QtQuick1ApplicationViewer &viewer, int rpm){
     /*
      * Write RPM to Slot
      */
-    Receiver udp_rpm;
-    rpm = udp_rpm.pullRPM();
+
 
 }

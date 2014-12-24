@@ -47,22 +47,24 @@
 Receiver::Receiver(QWidget *parent)
     : QWidget(parent)
 {
+
     statusLabel = new QLabel(tr("Listening for broadcasted messages"));
     statusLabel->setWordWrap(true);
 
     quitButton = new QPushButton(tr("&Quit"));
 
+
     udpSocket = new QUdpSocket(this);
     udpSocket->bind(5050, QUdpSocket::ShareAddress);
 
-
-    connect(udpSocket, SIGNAL(readyRead()),
-            this, SLOT(processPendingDatagrams()));
-
     /*
     connect(udpSocket, SIGNAL(readyRead()),
-            this, SLOT(pullRPM()));
+            this, SLOT(processPendingDatagrams()));
     */
+
+
+    connect(udpSocket, SIGNAL(readyRead()),
+            this, SLOT(pullRPM()));
 
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
 
@@ -114,7 +116,7 @@ int Receiver::pullRPM()
         QString rpm_str = rpm_split.at(1);
         rpm = rpm_str.toInt();
 
-        //qDebug() << rpm;
+        qDebug() << rpm;
 
         return(rpm);
     }
